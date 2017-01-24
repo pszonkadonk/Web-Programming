@@ -59,7 +59,7 @@ function cupsOfCoffee(cups) {
 		}
 		console.log();
 		i--;
-	}
+		}
 	console.log(`${i} cup of coffee on the desk! ${i} cup of coffee!`);
 	console.log("Pick it up, drink the cup, no more coffee left on the desk!");
 }
@@ -67,19 +67,26 @@ function cupsOfCoffee(cups) {
 //4 
 
 function occurrencesOfSubstring(fullString, substring) {
-	let regEx = /ll/g;
-	let arr;
-	let occurrences = 0;
-	while((arr = regEx.exec(fullString)) !== null) {
-		occurrences+=1;
+
+	if(arguments.length !== 2) {
+		throw new UserException("Please pass both a string and a substring to search for.");
 	}
-	console.log(occurrences);
-	return occurrences;
+	if(typeof(fullString) !== 'string' && typeof(substring) !== 'string') {
+		throw new UserException("Please make sure both parameters are strings.")
+	} 
+
+	let regEx = new RegExp(substring);
+	let occurences = 0;
+	let matchingString;
+	let position;
+
+	while(matchingString = fullString.match(regEx)) {
+		position = matchingString.index;
+		occurences +=1;
+		fullString = fullString.slice(position+1); 
+	}
+	return occurences;
 }
-
-let bar = occurrencesOfSubstring("Helllllllo", "ll");
-
-
 
 
 
@@ -90,5 +97,7 @@ let bar = occurrencesOfSubstring("Helllllllo", "ll");
 // console.log(foo);
 // sayHelloTo("Michael", "Pszonka", "Mr.");
 // cupsOfCoffee();
+// let bar = occurrencesOfSubstring("Helllllllo, class!", "ll");
+
 
 
