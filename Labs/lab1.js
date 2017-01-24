@@ -65,7 +65,6 @@ function cupsOfCoffee(cups) {
 }
 
 //4 
-
 function occurrencesOfSubstring(fullString, substring) {
 
 	if(arguments.length !== 2) {
@@ -87,6 +86,34 @@ function occurrencesOfSubstring(fullString, substring) {
 	}
 	return occurences;
 }
+
+//5
+function randomizeSentences(paragraph) {
+
+	if(arguments.length !== 1) {
+		throw new UserException("Must only pass one string to function")
+	}
+
+	let regEx = /[^.?!]+[.!?]*/g
+	let splitSentence = paragraph.match(regEx);
+	let randomSentence;
+
+	splitSentence.sort(function(sentence1, sentence2){
+		return(0.5-Math.random());
+	}); 
+	splitSentence = splitSentence.map(function(element){
+		return element.trim();
+	});
+	randomSentence = splitSentence.join(" ");
+	return randomSentence;
+}
+
+
+let foo = randomizeSentences("Hello, world!!! I am a paragraph. You can tell that I am a paragraph because there are multiple sentences that are split up by punctuation marks. Grammar can be funny, so I will only put in paragraphs with periods, exclamation marks, and question marks -- no quotations.");
+// console.log(foo);
+console.log(foo);
+
+
 
 
 
