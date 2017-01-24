@@ -24,6 +24,13 @@ function sumOfSquares(num1, num2, num3) {
 
 //2
 function sayHelloTo(firstName, lastName, title) {
+
+	for(let i = 0; i < arguments.length; i++) {
+		if(typeof(arguments[i]) !== 'string') {
+			throw new UserException("Please only pass strings as parameters");
+		}
+	}
+
 	switch(arguments.length) {
 		case 0:
 			throw new UserException('Please pass a value.');
@@ -43,25 +50,50 @@ function sayHelloTo(firstName, lastName, title) {
 
 //3
 function cupsOfCoffee(cups) {
+
+	let lyrics = [];
+
+	if(arguments.length === 0) {
+		throw new UserException("Please pass a value.");
+	}
 	if(typeof(cups) !== 'number') {
 		throw new UserException("Please pass cups as a number.");
 	}
 	else if(cups <= 0) {
 		throw new UserException("You need atleast one cup of coffee on the desk!");
 	}
+
 	let i = cups;
-	while(i !== 1){
-		console.log(`${i} cups of coffee on the desk! ${i} cups of coffee!`);
-		if(i-1 === 1) {
-			console.log(`Pick one up, drink the cup, ${i-1} cup of coffee on the desk!`);
+	let msg = '';
+
+	while(i !== 0){
+		if(i === 1){
+			msg = `${i} cup of coffee on the desk! ${i} cup of coffee!`;
+			lyrics.push(msg);
+			msg = "Pick it up, drink the cup, no more coffee left on the desk!";
+			lyrics.push(msg);
+			break;
+		}else {
+		msg = `${i} cups of coffee on the desk! ${i} cups of coffee!`;
+		lyrics.push(msg);
+		}
+		if(i === 2) {
+			msg = `Pick one up, drink the cup, ${i-1} cup of coffee on the desk!`;
+			lyrics.push(msg);
 		} else{
-			console.log(`Pick one up, drink the cup, ${i-1} cups of coffee on the desk!`);
+			msg = `Pick one up, drink the cup, ${i-1} cups of coffee on the desk!`;
+			lyrics.push(msg);
 		}
-		console.log();
 		i--;
+	}
+	//print lyrics
+	lyrics.forEach(function(line,index){
+		console.log(line);
+		if(index % 2 === 1) {
+			console.log();
 		}
-	console.log(`${i} cup of coffee on the desk! ${i} cup of coffee!`);
-	console.log("Pick it up, drink the cup, no more coffee left on the desk!");
+	});
+	return lyrics;
 }
 
 //4 
@@ -72,6 +104,9 @@ function occurrencesOfSubstring(fullString, substring) {
 	}
 	if(typeof(fullString) !== 'string' && typeof(substring) !== 'string') {
 		throw new UserException("Please make sure both parameters are strings.")
+	}
+	if(substring === "") {
+		throw new UserException("Cannot search for an empty string!");
 	} 
 
 	let regEx = new RegExp(substring);
@@ -91,10 +126,16 @@ function occurrencesOfSubstring(fullString, substring) {
 function randomizeSentences(paragraph) {
 
 	if(arguments.length !== 1) {
-		throw new UserException("Must only pass one string to function")
+		throw new UserException("Must pass one string to function");
+	}
+	if(typeof(paragraph) !== 'string') {
+		throw new UserException("Parameter must be a string.");
+	}
+	if(paragraph === "") {
+		throw new UserException("Please do not pass an empty string.")
 	}
 
-	let regEx = /[^.?!]+[.!?]*/g
+	let regEx = /[^.?!]{1,}[.!?]+/g
 	let splitSentence = paragraph.match(regEx);
 	let randomSentence;
 
@@ -105,26 +146,22 @@ function randomizeSentences(paragraph) {
 		return element.trim();
 	});
 	randomSentence = splitSentence.join(" ");
+	console.log(randomSentence);
 	return randomSentence;
 }
-
-
-let foo = randomizeSentences("Hello, world!!! I am a paragraph. You can tell that I am a paragraph because there are multiple sentences that are split up by punctuation marks. Grammar can be funny, so I will only put in paragraphs with periods, exclamation marks, and question marks -- no quotations.");
-// console.log(foo);
-console.log(foo);
-
-
-
-
-
 
 
 // Test
 // let foo = sumOfSquares(5,3,10);
 // console.log(foo);
-// sayHelloTo("Michael", "Pszonka", "Mr.");
-// cupsOfCoffee();
-// let bar = occurrencesOfSubstring("Helllllllo, class!", "ll");
 
+// sayHelloTo("Phil", "Barresi", "Mr.");
+
+// let lyrics = cupsOfCoffee(99);
+
+// let bar = occurrencesOfSubstring("Helllllllo, class!", "ll");
+// console.log(bar);
+
+// let baz = randomizeSentences("Hello, world! I am a paragraph. You can tell that I am a paragraph because there are multiple sentences that are split up by punctuation marks. Grammar can be funny, so I will only put in paragraphs with periods, exclamation marks, and question marks -- no quotations.");
 
 
