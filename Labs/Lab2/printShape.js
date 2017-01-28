@@ -20,35 +20,58 @@ let triangle = (lines) => {
 	if(typeof(lines) !== "number") {
 		throw new UserException("Please enter lines as a number");
 	}
-	let triangleLine = "";
-	if(lines === 1){
-		triangleLine += "/\\";
-		console.log(triangleLine); 
+	if(lines < 0 || lines === undefined) {
+		throw new UserException("Please enter a number greater then or equal to zero");
 	}
-	else{
-		let outerpadding = "", innerPadding = "";
-		let baseShifter = 0, outerShifter = 0, innerShifter = 1;
 
-		for(let i = 1; i <=lines; i++) {
-			outerShifter = lines - i;
-			if(i === lines) {
-				innerPadding = Array((lines + baseShifter)).join("-");
-				triangleLine = "/" + innerPadding + "\\";
-				console.log(triangleLine);
-			}else {
-				innerPadding = Array(innerShifter).join("s");
-				outerpadding = Array((outerShifter)+1).join("s");
-				triangleLine = outerpadding + "/" + innerPadding + "\\";
-				console.log(triangleLine);
-				baseShifter +=1;
-				innerShifter+=2;
-			}
+	let triangleLine = "";
+	let outerpadding = "", innerPadding = "";
+	let baseShifter = 0, outerShifter = 0, innerShifter = 1;
+
+	for(let i = 1; i <= lines; i++) {
+		outerShifter = lines - i;
+		if(i === lines) {
+			innerPadding = Array((lines + baseShifter)).join("-");
+			triangleLine = "/" + innerPadding + "\\";
+			console.log(triangleLine);
+		}else {
+			innerPadding = Array(innerShifter).join("s");
+			outerpadding = Array((outerShifter)+1).join("s");
+			triangleLine = outerpadding + "/" + innerPadding + "\\";
+			console.log(triangleLine);
+			baseShifter +=1;
+			innerShifter+=2;
 		}
 	}
 }
 
 
-triangle(5);
+let square = (lines) => {
+	if(typeof(lines) !== "number") {
+		throw new UserException("Please enter lines as a number");
+	}
+	if(lines < 2 || lines === undefined) {
+		throw new UserException("Please enter a number greater then or equal to zero");
+	}
+
+	let squareLine = "";
+	let verticalPadding = "";
+
+	for(let i = 1; i <= lines; i++) {
+		if(i === 1 || i === lines) {
+			verticalPadding = Array(lines+1).join("-");
+			squareLine = "|" + verticalPadding + "|";
+			console.log(squareLine);
+		} else{
+			verticalPadding = Array(lines+1).join(" ");
+			squareLine = "|" + verticalPadding + "|"
+			console.log(squareLine);
+		}
+	}
+}
+
+triangle(10);
+square(10);
 
 
 
@@ -67,6 +90,23 @@ triangle(5);
 
 
 	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
