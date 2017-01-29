@@ -35,8 +35,8 @@ let triangle = (lines) => {
 			triangleLine = "/" + innerPadding + "\\";
 			console.log(triangleLine);
 		}else {
-			innerPadding = Array(innerShifter).join("s");
-			outerpadding = Array((outerShifter)+1).join("s");
+			innerPadding = Array(innerShifter).join(" ");
+			outerpadding = Array((outerShifter)+1).join(" ");
 			triangleLine = outerpadding + "/" + innerPadding + "\\";
 			console.log(triangleLine);
 			baseShifter +=1;
@@ -70,9 +70,78 @@ let square = (lines) => {
 	}
 }
 
-triangle(10);
-square(10);
+let rhombus = (lines)=> {
+	
+	if(typeof(lines) !== "number") {
+		throw new UserException("Please enter lines as a number");
+	}
+	if(lines < 2 || lines === undefined ) {
+		throw new UserException("Please enter a number greater then or equal to 2");
+	}
+	if(lines % 2 !==  0) {
+		throw new UserException("Please enter an even number");
+	}
+	
+	let rhombusLine = "", innerPadding = "", outerpadding="";
+	let outerShifter = lines+1, innerShifter = 1;
+	
+	for(let i = 1; i <= lines; i++) {
+		if(i === 1) {
+			innerPadding = "-";
+			outerpadding = Array(lines+1).join(" ");
+			rhombusLine = outerpadding + "/"+innerPadding + "\\";
+			console.log(rhombusLine);
+			outerShifter-=1;
+			innerShifter+=1;
+		}
+		else if(i === lines) {
+			outerShifter = lines +1;
+			innerPadding = "-";
+			outerpadding = Array(outerShifter).join(" ");
+			rhombusLine = outerpadding + "\\"+innerPadding + "/";
+			console.log(rhombusLine);
+		}
+		else if(i < 0.5 * lines) {
+			innerPadding = Array(innerShifter+i).join(" "); 
+			outerpadding = Array(outerShifter).join(" ");
+			rhombusLine = outerpadding +"/" + innerPadding + "\\";
+			console.log(rhombusLine);
+			outerShifter-=1;
+			innerShifter+=1;
+		}
+		else if(i === 0.5 * lines)
+		{
+			innerPadding = Array(lines).join(" "); 
+			outerpadding = Array(outerShifter).join(" ");
+			rhombusLine = outerpadding +"/" + innerPadding + "\\";
+			console.log(rhombusLine);
+			innerShifter = lines;
+		 }
+		 else if(i === (0.5 * lines+1)) {
+			innerPadding = Array(innerShifter).join(" "); 
+			outerpadding = Array(outerShifter).join(" ");
+			rhombusLine = outerpadding +"\\" + innerPadding + "/";
+			console.log(rhombusLine);
+			outerShifter+=1;
+			innerShifter-=1;
+		}
+		else if(i > 0.5 * lines) {
+			innerShifter-=1;
+			innerPadding = Array(innerShifter).join(" ");
+			outerpadding = Array(outerShifter).join(" ");
+			rhombusLine = outerpadding + "\\" + innerPadding + "/";
+			console.log(rhombusLine); 
+			outerShifter+=1;
+			innerShifter-=1;
+		}
+	}
+			
+}
+	
 
+triangle(36);
+square(36);
+rhombus(36);
 
 
 
