@@ -4,9 +4,12 @@
   "description": "Michael Pszonka Lab2",
   "main": "index.js",
   "scripts": {
-  	"start": "node index.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Michael Pszonka",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "prompt": "^1.0.0"
+  }
 }
