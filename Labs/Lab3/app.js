@@ -15,38 +15,3 @@ let loadData = (filePath) => {
 }
 
 loadData(filePath);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// let promise = new Promise((resolve, reject) => {
-//     if(4<5) {
-//         reject(3);
-//     }
-//     resolve(4)
-
-// });
-
-// promise.then((results) =>{
-//     console.log(results);
-//     },((err) => {
-//         console.log(err);
-// }));
