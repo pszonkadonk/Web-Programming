@@ -9,6 +9,7 @@ module.exports = {
             fs.readFile(filePath, "utf-8", (err, data) => {
                 if(err) {
                     reject(new Error("Cannot find the file!"));
+                    return;
                 }
                 resolve(data);
             });
@@ -24,12 +25,10 @@ module.exports = {
                     reject(new Error("Cannot find the file!"));
                 }
                 try {
-                JSON.parse(data)
-                //    resolve(JSON.parse(data));  //gas to resolve true i beliveve!
+                    resolve(JSON.parse(data));  //gas to resolve true i beliveve!
                 } catch(err) {
                     reject(new Error("File was found but does not contain valid JSON notation!"));
                 }
-                resole(true);
             });
         });
     },

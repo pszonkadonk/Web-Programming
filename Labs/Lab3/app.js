@@ -2,167 +2,37 @@ const fileData = require('./fileData');
 const textMetrics = require('./textMetrics');
 const fs = require('fs');
 
-let filePath = "./chapter";
+let filePath = "chapter3.txt";
+filePath = filePath.replace(".txt","").concat(".result.json")
 
-fs.open(filePath, "r", (err) => {
-    if(!err) {  
+
+fs.open(filePath, "r", (err) => { 
+    if(!err) {  //if result file already exists, get it and output
         fileData.getFileAsString(filePath)
         .then((data) => {
             console.log(data);
         })
-    } else {
-        let fileRegEx = /[\w]+/
-        file = fileRegEx.exec(filePath)[0];
-        fileData.getFileAsString(file.concat(".txt"))
+    } else {  //if not
+        fileName = filePath.replace(/.+[\\\/]/, '').split(".")[0]; //strip filename w/o extensions. i.e "chapter3"
+        fileData.getFileAsString(fileName.concat(".txt")) // get the text from the file
         .then((data) => {
-            let simplifiedText = textMetrics.simplify(data);
-            return simplifiedText;
-        }, (reason) => {
-            console.log(reason);
-        })
-        .then((simplifiedText) => {
-            let simplifiedFile = file + ".debug.txt";
-            fileData.saveStringToFile(simplifiedFile, simplifiedText);
-            return simplifiedText;
-        }, (reason) => {
-            console.log(reason);
-        })
-        .then((simplifiedText) => {
-            let textFileMetrics = textMetrics.createMetrics(simplifiedText);
-            return textFileMetrics;
-        }, (reason) => {
-            console.log(reason);
-        })
-        .then((textFileMetrics) => {
-            let metricFile = file + ".result.json";
-            fileData.saveJSONToFile(metricFile, textFileMetrics);
-            return metricFile;
-        }, (reason) => {
-            console.log(reason);
-        })
-        .then((metricFile) => {
-            let theMetrics = fileData.getFileAsString(metricFile);
-            console.log(theMetrics);
-        }, (reason) => {
-            console.log(reason);
-        })
+            let simplifiedText = textMetrics.simplify(data);  //simplify the text
+            let simplifiedFile = fileName + ".debug.txt";
+            return fileData.saveStringToFile(simplifiedFile, simplifiedText)  //write simplified text to new file
+                .then(() => {
+                    fileData.getFileAsString(fileName.concat(".debug.txt")) // read from simplified text file
+                    .then((data) => {
+                        let textFileMetrics = textMetrics.createMetrics(data); // run metrics on simplified text
+                        let metricFile = fileName + ".result.json"
+                        return fileData.saveJSONToFile(metricFile, textFileMetrics)  //write metrics to file
+                            .then(() => {
+                                fileData.getFileAsJSON(fileName.concat(".result.json"))  //retrieve metrics as JSON object from file
+                                .then((data) => {
+                                    console.log(data);   //log metrics to the console
+                                }).catch((err) => {console.log(err);})
+                            }).catch((err) => {console.log(err)})
+                }).catch((err) => {console.log(err);});      
+            }).catch((err) => {console.log(err);});
+        }).catch((err) => {console.log(err);});
     }
 });
-
-
-
-
-
-
-// let t = "Hello, my friends! This is a great day to say hello.\n\nHello! 2 3 4 23";
-// let foo = textMetrics.createMetrics(t);
-
-// console.log(foo);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// let filePath = "C:/Users/Michael szonka/Desktop/chapter1.txt";
-// let JSONPath = "./test.json";
-// let fileToWrite = "./test.txt";
-// let JSONFileToWrite = "./jsonFileToWrite.json"
-// let text = "boogie w";
-
-// let jsonToWrite = [
-//     {
-//         "name": "Philip Barese",
-//         "codename": "The Spy",
-//         "role": "inconspicuously making your coffee while overhearing all your secret plans."
-//     },
-//     {
-//         "name": "Jordan Rails",
-//         "codename": "The Face",
-//         "role": "changing the face of education -- and making sure that no one catches on."
-//     }
-// ]
-
-
-
-
-
-//  loadData = (filePath) => {
-
-//     fileData.getFileAsString(filePath)
-//     .then((data) => { // data fulfilled do something
-//         // console.log(data);
-//     }, (reason) => { //reject error, i.e file not found 
-//         console.log(typeof(reason))
-//         console.log(reason);
-//     });
-// }
-
-// let loadJSONdata = (filePath) => {
-    
-//     fileData.getFileAsJSON(JSONPath)
-//     .then((data) =>{
-//         console.log(data);
-//     },(reason) => {
-//         console.log(reason)
-//     });
-// }
-
-// let writeDataToFile = (filePath, text) => {
-    
-//     fileData.saveStringToFile(filePath, text)
-//     .then((resolved) => {
-//         if(resolved) {
-//             console.log("Data has been written to file");
-//         }
-//     }, (reason) => {
-//         console.log(reason);
-//     });
-// };
-
-// let writeJSONToFile = (filePath, JSONObject) => {
-
-//     fileData.saveJSONToFile(filePath, JSONObject)
-//     .then((resolved) => {
-//         console.log("Data has been written to file");
-//     }, (reason) => {
-//         console.log(reason);
-//     });
-// }
-
-
-
-// loadData(filePath);
-// loadJSONdata(JSONPath);
-// writeDataToFile(fileToWrite, text);
-// writeJSONToFile(JSONFileToWrite, {});

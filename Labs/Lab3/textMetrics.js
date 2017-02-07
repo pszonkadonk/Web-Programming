@@ -13,8 +13,7 @@ module.exports = {
         return(simplifiedText);
     },
     createMetrics: (text) => {
-        let simplifiedText = module.exports.simplify(text);
-        let textArray = simplifiedText.split(" ");
+        let textArray = text.split(" ");
         let totalLetters = 0, totalWords = 0, uniqueWords = 0;
         let longWords = 0, averageWordLength = 0;
         let wordOccurrences = {}, metrics = {};
