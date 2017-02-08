@@ -2,37 +2,44 @@ const fileData = require('./fileData');
 const textMetrics = require('./textMetrics');
 const fs = require('fs');
 
-let filePath = "chapter3.txt";
-filePath = filePath.replace(".txt","").concat(".result.json")
+let textFile = "./chapter2.txt";
+
+let resultFile = textFile.replace(/.+[\\\/]/, '')
+                         .replace(".txt", ".result.json");
 
 
-fs.open(filePath, "r", (err) => { 
-    if(!err) {  //if result file already exists, get it and output
-        fileData.getFileAsString(filePath)
-        .then((data) => {
-            console.log(data);
-        })
-    } else {  //if not
-        fileName = filePath.replace(/.+[\\\/]/, '').split(".")[0]; //strip filename w/o extensions. i.e "chapter3"
-        fileData.getFileAsString(fileName.concat(".txt")) // get the text from the file
-        .then((data) => {
-            let simplifiedText = textMetrics.simplify(data);  //simplify the text
-            let simplifiedFile = fileName + ".debug.txt";
-            return fileData.saveStringToFile(simplifiedFile, simplifiedText)  //write simplified text to new file
+let mainChain = fileData.getFileAsJSON(resultFile).then((jsonObject) => {                //if result.json exists, print
+    console.log(jsonObject);
+}).catch((error) => {                                                                    // else search for .txt file and begin
+       return fileData.getFileAsString(textFile)
+            .then((text) => {
+                text = textMetrics.simplify(text);                                      // simplify text
+                let simplifiedFile = textFile.replace(/.+[\\\/]/, '')
+                                             .replace(".txt", ".debug.text");
+                return fileData.saveStringToFile(simplifiedFile, text)                  // write simplified text to .debug-text file
                 .then(() => {
-                    fileData.getFileAsString(fileName.concat(".debug.txt")) // read from simplified text file
-                    .then((data) => {
-                        let textFileMetrics = textMetrics.createMetrics(data); // run metrics on simplified text
-                        let metricFile = fileName + ".result.json"
-                        return fileData.saveJSONToFile(metricFile, textFileMetrics)  //write metrics to file
+                    return fileData.getFileAsString(simplifiedFile)                      // read data from .debug-text
+                        .then((text) => {
+                            let textFileMetrics = textMetrics.createMetrics(text);        // create metrics on file
+                            return fileData.saveJSONToFile(resultFile, textFileMetrics)   // write metric json to file
                             .then(() => {
-                                fileData.getFileAsJSON(fileName.concat(".result.json"))  //retrieve metrics as JSON object from file
-                                .then((data) => {
-                                    console.log(data);   //log metrics to the console
-                                }).catch((err) => {console.log(err);})
-                            }).catch((err) => {console.log(err)})
-                }).catch((err) => {console.log(err);});      
-            }).catch((err) => {console.log(err);});
-        }).catch((err) => {console.log(err);});
-    }
-});
+                                return fileData.getFileAsJSON(resultFile)                 // read metrics json object from file
+                                .then((metrics) => {
+                                    console.log(metrics);                                 // console.log metrics file
+                                }) 
+                                .catch((err) => {
+                                    console.log(err);
+                                });
+                            }).catch((err) => {
+                                console.log(err);
+                            });
+                        }).catch((err) => {
+                            console.log(err);
+                        });
+                    }).catch((err) => {
+                        console.log(err);
+                });
+            }).catch((err) => {
+                console.log(err);
+            });
+        });
