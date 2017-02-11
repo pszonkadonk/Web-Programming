@@ -4,15 +4,23 @@ const todoItems = mongoCollections.todoItems;
 
 let exportedMethods = {
 
+    getTask(id) {
+        if(!id) {
+            return Promise.reject("You must provide an id!");
+        }
+        return todoItems().then((todoItemCollection) => {
+            return todoItemCollection.findOne({_id: id});
+        })
+    },
     createTask(title, description) {
         if(!title) {
-            Promise.reject("You must provide a title for the task!")
+            return Promise.reject("You must provide a title for the task!")
         }
         if(!description) {
-            Promise.reject("You must provide a description for the task!");
+            return Promise.reject("You must provide a description for the task!");
         }
         if(title === "" || description === "") {
-            Promise.reject("Neither your title or description can contain an empty string!");
+            return Promise.reject("Neither your title or description can contain an empty string!");
         }
 
         return todoItems().then((todoItemCollection) => {
@@ -23,11 +31,15 @@ let exportedMethods = {
                 completed: false,
                 completedAt: null
             };
-
+            
             return todoItemCollection
                 .insertOne(newTask)
                 .then((newInsertedInformation) => {
-                    return newInsertedInformation.insertId;
+                    return newInsertedInformation.insertedId;
+                })
+                .then((newId) => {
+                    console.log("The id in createTask: " + newId);
+                    return this.getTask(newId);
                 });
         });
     },
@@ -35,9 +47,9 @@ let exportedMethods = {
         return todoItems().then((todoItemsCollection) => {
             if(Object.keys(todoItemsCollection.length === 0)) {
                 Promise.reject("There are no todo items in the collection");
-            })
+            }
             return todoItems
-        })l
+        });
     }
 }
 
