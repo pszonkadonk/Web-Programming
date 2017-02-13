@@ -38,17 +38,17 @@ let exportedMethods = {
                     return newInsertedInformation.insertedId;
                 })
                 .then((newId) => {
-                    console.log("The id in createTask: " + newId);
                     return this.getTask(newId);
                 });
         });
     },
     getAllTasks() {
-        return todoItems().then((todoItemsCollection) => {
-            if(Object.keys(todoItemsCollection.length === 0)) {
-                Promise.reject("There are no todo items in the collection");
+        return todoItems().then((todoItemCollection) => {
+            if(todoItemCollection.find().count() === 0) {
+                return Promise.reject("There are no todo items in the collection");
             }
-            return todoItems
+            let taskList = todoItemCollection.find().toArray();
+            return taskList;
         });
     }
 }
