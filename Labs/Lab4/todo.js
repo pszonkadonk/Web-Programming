@@ -50,8 +50,46 @@ let exportedMethods = {
             let taskList = todoItemCollection.find().toArray();
             return taskList;
         });
+    },
+    completeTask(taskId) {
+        if(!taskId) {
+            return Promise.reject("You must provide an id for a task!");
+        }
+        return this.getTask(taskId)
+            .then((task) => {
+                let updatedTask = {
+                    _id: taskId,
+                    title: task.title,
+                    description: task.description,
+                    completed: true,
+                    completedAt: new Date()
+                };
+                return todoItems().then((todoItemCollection) => {
+                    return todoItemCollection.updateOne({
+                        _id: taskId
+                    }, updatedTask). then((matchingDoc) => {
+                        return this.getTask(taskId);
+                    });
+                });
+            });
+    },
+    removeTask(id) {
+        if(!id) {
+            return Promise.reject("You must prvode an id for a task");
+        }
+
+        return todoItems().then((todoItemCollection) => {
+            return todoItemCollection.deleteOne({_id: id})
+                .then((deletionInformation) => {
+                    // console.log(deletionInformation);
+                    if(deletionInformation.deletedCount === 0) {
+                        return Promise.reject("Could not remove the task with that id");
+                    }
+                });
+        });
     }
 }
+
 
 module.exports = exportedMethods;
 
