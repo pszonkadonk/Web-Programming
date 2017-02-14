@@ -1,76 +1,45 @@
 const fileData = require('./fileData');
 const textMetrics = require('./textMetrics');
+const fs = require('fs');
 
-let filePath = "C:/Users/Michael szonka/Desktop/chapter1.txt";
-let JSONPath = "./test.json";
-let fileToWrite = "./test.txt";
-let JSONFileToWrite = "./jsonFileToWrite.json"
-let text = "boogie w";
+let textFile = "./chapter2.txt";
 
-let jsonToWrite = [
-    {
-        "name": "Philip Barese",
-        "codename": "The Spy",
-        "role": "inconspicuously making your coffee while overhearing all your secret plans."
-    },
-    {
-        "name": "Jordan Rails",
-        "codename": "The Face",
-        "role": "changing the face of education -- and making sure that no one catches on."
-    }
-]
+let resultFile = textFile.replace(/.+[\\\/]/, '')
+                         .replace(".txt", ".result.json");
 
 
-
-
-let loadData = (filePath) => {
-
-    fileData.getFileAsString(filePath)
-    .then((data) => { // data fulfilled do something
-        // console.log(data);
-    }, (reason) => { //reject error, i.e file not found 
-        console.log(typeof(reason))
-        console.log(reason);
-    });
-}
-
-let loadJSONdata = (filePath) => {
-    
-    fileData.getFileAsJSON(JSONPath)
-    .then((data) =>{
-        console.log(data);
-    },(reason) => {
-        console.log(reason)
-    });
-}
-
-let writeDataToFile = (filePath, text) => {
-    
-    fileData.saveStringToFile(filePath, text)
-    .then((resolved) => {
-        if(resolved) {
-            console.log("Data has been written to file");
-        }
-    }, (reason) => {
-        console.log(reason);
-    });
-};
-
-let writeJSONToFile = (filePath, JSONObject) => {
-
-    fileData.saveJSONToFile(filePath, JSONObject)
-    .then((resolved) => {
-        console.log("Data has been written to file");
-    }, (reason) => {
-        console.log(reason);
-    });
-}
-
-
-console.log(textMetrics.simplify("Daring Democrats to keep their word at the expense of several sleepless nights, Senator John Cornyn of Texas, the chamber’s No. 2 Republican, said the Senate session would not end until lawmakers confirmed four of Mr. Trump’s nominees: Ms. DeVos, Senator Jeff Sessions of Alabama as attorney general, Representative Tom Price of Georgia to lead the Department of Health and Human Services, and Steven T. Mnuchin as Treasury secretary."));
-
-
-// loadData(filePath);
-// loadJSONdata(JSONPath);
-// writeDataToFile(fileToWrite, text);
-// writeJSONToFile(JSONFileToWrite, {});
+let mainChain = fileData.getFileAsJSON(resultFile).then((jsonObject) => {                //if result.json exists, print
+    console.log(jsonObject);
+}).catch((error) => {                                                                    // else search for .txt file and begin
+       return fileData.getFileAsString(textFile)
+            .then((text) => {
+                text = textMetrics.simplify(text);                                      // simplify text
+                let simplifiedFile = textFile.replace(/.+[\\\/]/, '')
+                                             .replace(".txt", ".debug.text");
+                return fileData.saveStringToFile(simplifiedFile, text)                  // write simplified text to .debug-text file
+                .then(() => {
+                    return fileData.getFileAsString(simplifiedFile)                      // read data from .debug-text
+                        .then((text) => {
+                            let textFileMetrics = textMetrics.createMetrics(text);        // create metrics on file
+                            return fileData.saveJSONToFile(resultFile, textFileMetrics)   // write metric json to file
+                            .then(() => {
+                                return fileData.getFileAsJSON(resultFile)                 // read metrics json object from file
+                                .then((metrics) => {
+                                    console.log(metrics);                                 // console.log metrics file
+                                }) 
+                                .catch((err) => {
+                                    console.log(err);
+                                });
+                            }).catch((err) => {
+                                console.log(err);
+                            });
+                        }).catch((err) => {
+                            console.log(err);
+                        });
+                    }).catch((err) => {
+                        console.log(err);
+                });
+            }).catch((err) => {
+                console.log(err);
+            });
+        });
