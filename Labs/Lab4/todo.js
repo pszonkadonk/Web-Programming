@@ -62,7 +62,7 @@ let exportedMethods = {
                     title: task.title,
                     description: task.description,
                     completed: true,
-                    completedAt: new Date()
+                    completedAt: new Date().toLocaleString()
                 };
                 return todoItems().then((todoItemCollection) => {
                     return todoItemCollection.updateOne({
@@ -81,7 +81,6 @@ let exportedMethods = {
         return todoItems().then((todoItemCollection) => {
             return todoItemCollection.deleteOne({_id: id})
                 .then((deletionInformation) => {
-                    // console.log(deletionInformation);
                     if(deletionInformation.deletedCount === 0) {
                         return Promise.reject("Could not remove the task with that id");
                     }
