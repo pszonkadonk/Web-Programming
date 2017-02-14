@@ -4,7 +4,7 @@ module.exports = {
     getFileAsString: (filePath) => {
         return new Promise((resolve, reject) => {
             if(filePath === undefined || filePath === "") {
-                reject(new Error("File path cannot be empty!"))
+                reject(new Error("File path cannot be empty!"));
             }
             fs.readFile(filePath, "utf-8", (err, data) => {
                 if(err) {
