@@ -57,6 +57,9 @@ let exportedMethods = {
         }
         return this.getTask(taskId)
             .then((task) => {
+                if(task === null) {
+                    return Promise.reject("This is not a task in the database!");
+                }
                 let updatedTask = {
                     _id: taskId,
                     title: task.title,

@@ -75,10 +75,6 @@ let completeRemainingTasks = remainingTasks.then((taskList)=> {    //complete al
 
 
 
-
-
-
-
 // let createdTask = todoItems.createTask("First Task", "My description is that this is my first task");
 
 // let seeSomeTasks = createdTask.then((task) => {
