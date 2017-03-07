@@ -52,34 +52,34 @@ router.post('/', (req, res) => {
 });
 
 router.put('/:id', (req, res)=> {
-    let recipieInfo = req.body;
+    let recipeInfo = req.body;
 
     if(!recipeInfo) {
         res.status(400).json({error: "You must provide info to create a recipe"});
         return;
     }
-    if(!recipeInfo.title) {
-        res.status(400).json({error: "You must provide a recipe title"});
-        return;
-    }
-    if(!recipeInfo.ingredients) {
-        res.status(400).json({error: "You must provide ingredients!"});
-        return;
-    }
-    if(!recipeInfo.steps) {
-        res.status(400).json({error: "You must provide steps for your recipe!"});
-        return;
-    }
+    // if(!recipeInfo.title) {
+    //     res.status(400).json({error: "You must provide a recipe title"});
+    //     return;
+    // }
+    // if(!recipeInfo.ingredients) {
+    //     res.status(400).json({error: "You must provide ingredients!"});
+    //     return;
+    // }
+    // if(!recipeInfo.steps) {
+    //     res.status(400).json({error: "You must provide steps for your recipe!"});
+    //     return;
+    // }
 
-    let getRecipe = recipeData.getRecipeById({_id: req.params.id}).then(() =>{
-        return recipeData.updateRecipe(req,params.id, recipeInfo)
+    let getRecipe = recipeData.getRecipeById(req.params.id).then((recip) =>{
+        return recipeData.updateRecipe(req.params.id, recipeInfo)
             .then((updatedRecipe) => {
                 res.json(updatedRecipe)
             }, () => {
-                res.status(500).json({error: "There was an issue contacting server"});
+                res.status(500).json({error: "There was an issue updating recipe"});
             });
-    }).catch(() => {
-        res.status(404).json({error: "Recipe not found"});
+    }).catch((err) => {
+        res.status(404).json({error: "err"});
     });
 });
 

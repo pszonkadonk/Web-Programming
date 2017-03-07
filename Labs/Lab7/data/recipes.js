@@ -11,8 +11,9 @@ let exportedMethods = {
     getRecipeById(id) {
         return recipes().then((recipeCollection) => {
             return recipeCollection.findOne({_id: id}).then((recipe) => {
+                console.log(recipe);
                 if(!recipe) {
-                    return Promise.reject("No recipe found");
+                    throw ("No recipe found");
                 }
                 return recipe;
             });
