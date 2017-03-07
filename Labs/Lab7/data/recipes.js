@@ -11,7 +11,6 @@ let exportedMethods = {
     getRecipeById(id) {
         return recipes().then((recipeCollection) => {
             return recipeCollection.findOne({_id: id}).then((recipe) => {
-                console.log(recipe);
                 if(!recipe) {
                     throw ("No recipe found");
                 }
@@ -45,18 +44,30 @@ let exportedMethods = {
         });
     },
     updateRecipe(id, updatedRecipe) {
-        return this.getRecipeById(id).then((currentRecipe) =>{
-            let updatedRecipe = {
-                title: updatedRecipe.title,
-                ingredients: updatedRecipe.ingredients,
-                steps: updateRecipe.steps
+        return recipes().then((recipeCollection) =>{
+            let updatedRecipeData = {}
+
+            if(updatedRecipe.title) {
+                updatedRecipeData.title = updatedRecipe.title;
+            }
+
+            if(updatedRecipe.ingredients) {
+                updatedRecipeData.ingredients = updatedRecipe.ingredients;
+            }
+
+            if(updatedRecipe.steps) {
+                updatedRecipeData.steps = updatedRecipe.steps;
+            }
+
+            if(updatedRecipe.comments) {
+                updatedRecipeData.comments.push(updatedRecipe.comments);
             }
 
             let updateCommand = {
-                $set: updatedRecipe
+                $set: updatedRecipeData
             };
 
-            return recipeCollection.updateOne({_id: req.id}, updateCommand).then(() => {
+            return recipeCollection.updateOne({_id: id}, updateCommand).then(() => {
                 return this.getRecipeById(id);
             });
         });

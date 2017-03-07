@@ -6,7 +6,11 @@ const recipeData = data.recipes;
 
 router.get('/', (req, res) => {
     recipeData.getAllRecipes().then((recipeList) => {
-        res.json(recipeList);
+        let recipeString = ""
+        recipeList.forEach(function(recipe) {
+           recipeString +=`{_id: ${recipe._id}, title: ${recipe.title}\n`;
+        });
+        res.send(recipeString);
     }, () => {
         res.status(500).json({error: "Could not contact server"});
     })
@@ -58,28 +62,18 @@ router.put('/:id', (req, res)=> {
         res.status(400).json({error: "You must provide info to create a recipe"});
         return;
     }
-    // if(!recipeInfo.title) {
-    //     res.status(400).json({error: "You must provide a recipe title"});
-    //     return;
-    // }
-    // if(!recipeInfo.ingredients) {
-    //     res.status(400).json({error: "You must provide ingredients!"});
-    //     return;
-    // }
-    // if(!recipeInfo.steps) {
-    //     res.status(400).json({error: "You must provide steps for your recipe!"});
-    //     return;
-    // }
 
     let getRecipe = recipeData.getRecipeById(req.params.id).then((recip) =>{
+        // console.log("This is recip");
+        // console.log(recip);
         return recipeData.updateRecipe(req.params.id, recipeInfo)
             .then((updatedRecipe) => {
                 res.json(updatedRecipe)
             }, () => {
-                res.status(500).json({error: "There was an issue updating recipe"});
+                res.status(500).json({error: "Could not updated recipe"});
             });
     }).catch((err) => {
-        res.status(404).json({error: "err"});
+        res.status(404).json({error: err});
     });
 });
 
