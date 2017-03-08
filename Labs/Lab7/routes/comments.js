@@ -3,43 +3,41 @@ const router = express.Router();
 const data = require('../data');
 const commentData = data.comments;
 
-router.get('/recipe/:recipeId', (req, res) => { //this works
+router.get('/recipe/:recipeId', (req, res) => {
     return commentData.getRecipeComments(req.params.recipeId).then((commentData) => {
-            let commentString = "";
+            let commentString = [];
             commentData.comments.forEach(function(comment) {
-                commentString+=`{_id: ${comment._id}, recipeId: ${commentData.recipeId}`+
-                     ` recipeTitle: ${commentData.recipeTitle}, poster: ${comment.poster} ` +
-                      `comment: ${comment.comment}}  `;
+                comment.recipeTitle = commentData.recipeTitle;
+                comment.recipeId = commentData.recipeId;
+                commentString.push((comment));
             });
-                res.json(commentString);
-    }, (err) => {
-        res.json({error: err});
+            res.json(commentString);
+    }, () => {
+        res.status(500).json({error: "Could not retrieve comments"});
     }).catch((err) => {
-        res.json({error: err});
+        res.status(404).json({error: err});
     });
 });
 
-router.get('/:id', (req, res) => {  //this works
+router.get('/:id', (req, res) => {  
     return commentData.getCommentById(req.params.id).then((commentData) =>{
-        console.log(commentData);
-        let commentString = `{_id: ${commentData._id}, recipeId: ${commentData.recipeId} ` +
-                            `recipeTitle: ${commentData.recipeTitle}, poster: ${commentData.poster}, comment: ${commentData.comment}}`
-
-        res.json(commentString);
+        res.json(commentData);
+    }, () => {
+        res.status(500).json({error: "Could not retrieve comment"});
+    }).catch((err) => {
+        res.status(404).json({error: err});
     });
 });
 
-router.post('/:recipeId', (req,res) => {  //this works
+router.post('/:recipeId', (req,res) => {
     let commentInfo = req.body;
-    console.log(req.params.recipeId)
-    console.log(commentInfo);
     commentData.addCommentToRecipe(req.params.recipeId, commentInfo.poster, commentInfo.comment)
-        .then((newComment) =>{
-            res.json(newComment)
+        .then((result) =>{
+            res.json(result)
         }, (err)=> {
             res.status(500).json({error: "This got caught in reject of then"});
         }).catch((err) => {
-            res.json({error: err});
+            res.status(404).json({error: err});
         });
 });
 
@@ -51,29 +49,25 @@ router.put('/:recipeId/:commentId', (req, res) => {
         res.status(400).json({error: "You must provide info to edit a comment"});
         return;
     }
-
-
     return commentData
         .updateComment(req.params.recipeId, req.params.commentId, commentInfo)
         .then((updatedComment) => {
             res.json(updatedComment)
-    }, (err) => {
-        res.json({error: err});
+    }, () => {
+        res.status(500).json({error: "Could not make update to comment"});
     }).catch((err) => {
-        console.log(err)
+        res.status(400).json({error: err});
     });
 });
 
 
-
-
-
-
 router.delete('/:id', (req, res) => {
     return commentData.removeComment(req.params.id).then(()=> {
-        res.json("Comment has been removed");
-    }, (err) => {
-        res.json({error: err});
+        res.status(200).json("Comment Removed");
+    }, () => {
+        res.status(500).json({error: "Could not delete comment"});
+    }).catch((err)=> {
+       res.status(400).json({error: err}); 
     });
 });
 

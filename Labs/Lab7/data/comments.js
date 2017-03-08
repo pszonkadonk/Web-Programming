@@ -84,10 +84,9 @@ let exportedMethods = {
                 .then(() => { 
                 return recipeCollection().then((recipeCollection) => {                    
                     return recipeCollection.updateOne({_id: recipeId},updatedCommand)
-                        .then((newCommentData) => {
-                            return newCommentData;
-                    });
                 })
+            }).then(()=> {
+                return newCommentData;
             });
         });
     },
