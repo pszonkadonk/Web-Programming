@@ -16,8 +16,9 @@ let foo = {
     comment: 'These eggs are terrible'
  }
 
-//  rt.addCommentToRecipe(foo._id, foo.poster, foo.comment);
-
+// rt.updateComment("d1806f1c-116d-4c10-a7d8-c1b441d05fbf","4e5c8b57-dccc-4ab2-99d2-d25b05af7e89", {
+// 	"comments": "Geeeeee!"
+// });
 
 app.listen(3000, () => {
     console.log("Server has started");

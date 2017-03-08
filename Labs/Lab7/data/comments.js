@@ -12,13 +12,6 @@ let exportedMethods = {
             return commentsCollection.find({}).toArray();
         });
     },
-    // getCommentById(id) {
-    //     if(!id) {
-    //         return Promise.reject("Please provide a valid comment id.");
-    //     }
-    //     return comments().then((commentsCollection) => {
-    //         return commentsCollection.find({_id: id}).toArray();
-    //     });
     getCommentById(id) {
         if(!id) {
             return Promise.reject("Please provide a valid comment id.");
@@ -93,22 +86,59 @@ let exportedMethods = {
                     return recipeCollection.updateOne({_id: recipeId},updatedCommand)
                         .then((newCommentData) => {
                             return newCommentData;
-                        });
-                    })
+                    });
+                })
+            });
+        });
+    },
+    updateComment(recipeId, commentId, updatedComment) {
+        return recipeCollection().then((collection) => {
+            let updateCommand = {
+                $set: {}
+            }
+            if(!updatedComment) {
+                return Promise.reject("Must provide an updated comment");
+            }
+            if(updatedComment.poster) {
+                updateCommand.$set["comments.$.poster"] = updatedComment.poster;
+            }
+            if(updatedComment.comment) {
+                updateCommand.$set["comments.$.comment"] = updatedComment.comment;
+            }
+
+            return collection.update({
+              _id: recipeId, comments:{
+                  $elemMatch: {
+                      _id: commentId
+                  }}}, updateCommand).then(() => {
+                      return this.getCommentById(commentId);
+                  });
+        });
+    },
+    removeComment(id) {
+        return recipeCollection().then((collection) => {
+            return collection.findOne({ comments: {
+                $elemMatch: {
+                    _id: id
+                }
+        }
+        }).then((recipe) => {
+            if(!recipe) {
+                return Promise.reject("sorry that comment does not exist");
+            }
+            let updatedCommand = {
+                $pull: {
+                    comments: {
+                        _id: id
+                    }
+                }
+            };
+            collection.updateOne({
+                _id: recipe._id}, updatedCommand)
                 });
             });
-        },
-        removeComment(id) {
-            return comments().then((commentsCollection) => {
-                return commentsCollection.removeOne({_id: id})
-                    .then((deletedCommentInfo) => {
-                        if(deletedCommentInfo.deletedCount === 0) {
-                            throw("Comment with that id could not be found")
-                        }
-                    });
-            });
         }
-}
+    }
 
 
 

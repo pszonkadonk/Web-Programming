@@ -64,8 +64,6 @@ router.put('/:id', (req, res)=> {
     }
 
     let getRecipe = recipeData.getRecipeById(req.params.id).then((recip) =>{
-        // console.log("This is recip");
-        // console.log(recip);
         return recipeData.updateRecipe(req.params.id, recipeInfo)
             .then((updatedRecipe) => {
                 res.json(updatedRecipe)
