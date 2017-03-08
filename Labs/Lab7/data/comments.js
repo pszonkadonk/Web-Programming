@@ -88,18 +88,18 @@ let exportedMethods = {
                 // recipeId: recipeId,
                 // recipeTitle: recipeTitle
             };
+
+            let updatedCommand = {
+                $addToSet: {comments: newCommentData}
+            }
+            
             return commentCollection
                 .insertOne(newCommentData)
                 .then(() => { 
                 // console.log(newCommentData);
                 return recipeCollection().then((recipeCollection) => {                    
-                    return recipeCollection.updateOne({_id: recipeId},{
-                        $addToSet: {
-                            comments: {
-                                newCommentData
-                                }
-                            }
-                        }).then((newCommentData) => {
+                    return recipeCollection.updateOne({_id: recipeId},updatedCommand)
+                        .then((newCommentData) => {
                             console.log("its is done");
                             return newCommentData;
                         });
