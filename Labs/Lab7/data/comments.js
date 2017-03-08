@@ -55,8 +55,16 @@ let exportedMethods = {
             return Promise.reject("Please provide a valid recipe id.");
         }
 
-        return recipeCollection().getRecipeById(id).then((recipe)=>{
-            return recipe.comments.toArray();
+       return recipes.getRecipeById(id).then((recipe)=>{
+           let foo = recipe.comments;
+           foo.recipeTitle = recipe.recipeTitle;
+           foo.recipeId = recipe._id;
+        //    let metaComment = {}
+        //     metaComment.comments =  recipe.comments;
+        //     metaComment.recipeTitle = recipe.title;
+        //     metaComment.recipeId = recipe._id;
+
+            return foo
         });
     },
     addCommentToRecipe(recipeId, poster, comment) {

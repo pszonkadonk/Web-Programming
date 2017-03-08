@@ -4,12 +4,12 @@ const data = require('../data');
 const commentData = data.comments;
 
 router.get('/recipe/:recipeId', (req, res) => {
-    return commentData.getRecipeComments(req.params.id).then((recipe) => {
+    return commentData.getRecipeComments(req.params.recipeId).then((comments) => {
             let commentString = "";
-            recipe.comments.forEach(function(comment) {
-                commentString+=`{_id: ${comment._id}, recipeId: ${recipe._id}`+
-                     `recipeTitle: ${recipe.title}, poster: ${comment.poster}`, +
-                      `comment: ${comment.comment}\n`;
+            comments.comments.forEach(function(com) {
+                commentString+=`{_id: ${com._id}, recipeId: ${com.recipeId}`+
+                     `recipeTitle: ${com.recipeTitle}, poster: ${com.poster}`, +
+                      `comment: ${com.comment}\n`;
         });
             res.json(commentString);
     });
