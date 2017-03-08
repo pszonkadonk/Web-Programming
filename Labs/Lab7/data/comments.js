@@ -19,15 +19,15 @@ let exportedMethods = {
     //     return comments().then((commentsCollection) => {
     //         return commentsCollection.find({_id: id}).toArray();
     //     });
-    getCommentsById(id) {
+    getCommentById(id) {
         if(!id) {
             return Promise.reject("Please provide a valid comment id.");
         }
 
         let commentData = {};
 
-        return recipeCollection().then((recipeCollection) =>{
-            recipeCollection.find({ comments: {
+        return recipeCollection().then((collection)=>{
+            return collection.findOne({ comments: {
                 $elemMatch: {
                     _id: id
                 }
@@ -36,17 +36,16 @@ let exportedMethods = {
             if(!recipe) {
                 return Promise.reject("sorry that comment does not exist");
             }
-            for(let i = 0; i < recipe.comments.length; i++) {
-                if(comment._id===id) {
-                    commentData._id = id;
-                    commentData.recipeId = recipe._id;
-                    commentData.recipeTitle = recipe.title;
-                    commentData.poster = comment.poster;
-                    commentData.comment = comment.comment;
-                    break;
-                    }
-                }
-                return commentData;
+
+            let targetComment = recipe.comments.filter((comment) => {
+                return comment._id === id;
+            });
+
+           let metaData = targetComment[0];
+           metaData.recipeId = recipe._id;
+           metaData.recipeTitle = recipe.title;
+           return metaData;
+
             });
         });
     },
@@ -56,15 +55,11 @@ let exportedMethods = {
         }
 
        return recipes.getRecipeById(id).then((recipe)=>{
-           let foo = recipe.comments;
-           foo.recipeTitle = recipe.recipeTitle;
-           foo.recipeId = recipe._id;
-        //    let metaComment = {}
-        //     metaComment.comments =  recipe.comments;
-        //     metaComment.recipeTitle = recipe.title;
-        //     metaComment.recipeId = recipe._id;
-
-            return foo
+           let metaData = {};
+           metaData.comments = recipe.comments;
+           metaData.recipeTitle = recipe.title;
+           metaData.recipeId = recipe._id;
+           return metaData;
         });
     },
     addCommentToRecipe(recipeId, poster, comment) {
@@ -85,8 +80,6 @@ let exportedMethods = {
                 _id: uuid.v4(),
                 poster: poster,
                 comment: comment
-                // recipeId: recipeId,
-                // recipeTitle: recipeTitle
             };
 
             let updatedCommand = {
@@ -96,11 +89,9 @@ let exportedMethods = {
             return commentCollection
                 .insertOne(newCommentData)
                 .then(() => { 
-                // console.log(newCommentData);
                 return recipeCollection().then((recipeCollection) => {                    
                     return recipeCollection.updateOne({_id: recipeId},updatedCommand)
                         .then((newCommentData) => {
-                            console.log("its is done");
                             return newCommentData;
                         });
                     })

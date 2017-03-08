@@ -3,26 +3,33 @@ const router = express.Router();
 const data = require('../data');
 const commentData = data.comments;
 
-router.get('/recipe/:recipeId', (req, res) => {
-    return commentData.getRecipeComments(req.params.recipeId).then((comments) => {
+router.get('/recipe/:recipeId', (req, res) => { //this works
+    return commentData.getRecipeComments(req.params.recipeId).then((commentData) => {
             let commentString = "";
-            comments.comments.forEach(function(com) {
-                commentString+=`{_id: ${com._id}, recipeId: ${com.recipeId}`+
-                     `recipeTitle: ${com.recipeTitle}, poster: ${com.poster}`, +
-                      `comment: ${com.comment}\n`;
-        });
-            res.json(commentString);
+            commentData.comments.forEach(function(comment) {
+                commentString+=`{_id: ${comment._id}, recipeId: ${commentData.recipeId}`+
+                     ` recipeTitle: ${commentData.recipeTitle}, poster: ${comment.poster} `, +
+                      `comment: ${comment.comment}}\n`;
+            });
+                res.json(commentString);
+    }, (err) => {
+        res.json({error: err});
+    }).catch((err) => {
+        res.json({error: err});
     });
 });
 
 router.get('/:id', (req, res) => {
-    return commentData.getCommentById(req.params.id).then((comment) =>{
-        res.json(`{_id: ${comment._id}, recipeId: ${comment.recipeId}` +
-        `recipeTitle: ${comment.recipeTitle}, poster: ${comment.poster}, comment: ${comment.comment}`);
+    return commentData.getCommentById(req.params.id).then((commentData) =>{
+        console.log(commentData);
+        let commentString = `{_id: ${commentData._id}, recipeId: ${commentData.recipeId}` +
+                            `recipeTitle: ${commentData.recipeTitle}, poster: ${commentData.poster}, comment: ${commentData.comment}}`
+
+        res.json(commentString);
     });
 });
 
-router.post('/:recipeId', (req,res) => {
+router.post('/:recipeId', (req,res) => {  //this works
     let commentInfo = req.body;
     console.log(req.params.recipeId)
     console.log(commentInfo);
@@ -40,4 +47,4 @@ router.post('/:recipeId', (req,res) => {
 
 
 
-module.exports = router;
+module.exports = router;    

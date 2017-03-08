@@ -20,6 +20,6 @@ let foo = {
 
 
 app.listen(3000, () => {
-    console.log("Sever has started");
+    console.log("Server has started");
     console.log("Listening on port 3000...");
 });
