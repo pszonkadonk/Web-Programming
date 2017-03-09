@@ -123,7 +123,7 @@ let exportedMethods = {
         }
         }).then((recipe) => {
             if(!recipe) {
-                return Promise.reject("sorry that comment does not exist");
+                return Promise.reject("Sorry that comment does not exist");
             }
             let updatedCommand = {
                 $pull: {

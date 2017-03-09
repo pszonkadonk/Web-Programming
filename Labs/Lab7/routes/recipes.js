@@ -6,9 +6,13 @@ const recipeData = data.recipes;
 
 router.get('/', (req, res) => {
     recipeData.getAllRecipes().then((recipeList) => {
-        let recipeString = ""
-        recipeList.forEach(function(recipe) {
-           recipeString +=`{_id: ${recipe._id}, title: ${recipe.title}\n`;
+        let recipeString = [];
+        recipeList.forEach((recipe) => {
+            let recipeTemp = {
+                _id: recipe._id,
+                title: recipe.title
+            }
+           recipeString.push(recipeTemp);
         });
         res.send(recipeString);
     }, () => {

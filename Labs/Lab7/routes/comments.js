@@ -35,7 +35,7 @@ router.post('/:recipeId', (req,res) => {
         .then((result) =>{
             res.json(result)
         }, (err)=> {
-            res.status(500).json({error: "This got caught in reject of then"});
+            res.status(500).json({error: "Was not about to submit new comment"});
         }).catch((err) => {
             res.status(404).json({error: err});
         });
