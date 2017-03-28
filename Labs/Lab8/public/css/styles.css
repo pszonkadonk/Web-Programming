@@ -1,0 +1,62 @@
+/*Body Formatting*/
+
+*, html{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+}
+
+.container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+/*Text Area*/
+
+textarea {
+    background-color: #ffffe0;
+}
+
+/*Palindrome List*/
+
+#list-palindrome { 
+    list-style-type: none;
+}
+
+/*Palindrome Settings*/
+
+.is-palindrome {
+    background-color: #add8e6;
+}
+
+.not-palindrome {
+    background-color: #d87093;
+}
+
+/*Error Settings*/
+
+.hidden {
+    display: none;
+}
+
+#error-container {
+    background-color: #d87093;
+}
+
+button {
+    padding: 10px;
+    background-color: #87cefa;
+}
+
+
+/*Student Info*/
+
+#student-info {
+    list-style-type: none;
+}
+
+#student-info li {
+    display: inline;
+    padding: 5px;
+    position: relative;
+    top: 150px;
+}
+

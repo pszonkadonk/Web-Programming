@@ -5,16 +5,16 @@ const configRoutes = require('./routes');
 const static = express.static(__dirname + '/public');
 
 const exphbs = require('express-handlebars');
-const handlebars = require('handlebars');
+const Handlebars = require('handlebars');
 
 const handlebarInstance = exphbs.create({
     defaultLayout: 'main',
     helpers: {
         asJSON: (obj, spacing) => {
             if(typeof spacing == 'number') 
-                return new handlebars.SafeString(JSON.stringify(obj, null, spacing))
+                return new Handlebars.SafeString(JSON.stringify(obj, null, spacing))
 
-            return new handlebars.SafeString(JSON.stringify(obj));
+            return new Handlebars.SafeString(JSON.stringify(obj));
         }
     }
 });
