@@ -5,6 +5,7 @@ const palindrome = data.palindrome
 
 
 router.get('/', (req,res) => {
+
     res.render('palindrome/static');
     console.log("in get");
 });
@@ -12,15 +13,14 @@ router.get('/', (req,res) => {
 router.post('/', (req,res) => {
     
     let testValue = req.body.palindrome;
-    console.log(testValue);
 
     try {
         if(palindrome.isPalindrome(testValue)) {
-            isPalindrome = true;
+            let isPalindrome = true;
             console.log("true");
         } 
         else {
-            isPalindrome = false;
+            let isPalindrome = false;
             console.log("false");
         }
     } catch(e) {
