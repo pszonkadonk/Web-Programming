@@ -94,44 +94,20 @@ app.get('/login', (req,res) => {
     res.render('user/login');
 })
 
-app.post("/login", passport.authenticate('local', { failureRedirect: '/login' , successRedirect: '/private'}));
-        // try to authenticate user with passport
+app.post("/login", 
+    passport.authenticate('local',
+    { failureRedirect: '/login',
+     successRedirect: '/private'
+    }
+));
 
-        // if user is authenticated
-        // if(user == "authenticated") {
-        //     res.redirect("/private")
-        // }
-        // else {  //otherwise redirect to / and display error message
-        //     res.redirect("/")
-        // }
 
 app.get("/private", (req, res) => {
     //only valid users can get to /private
     
-    // let user = req.session.passport.user;
-    let loggedUser = {
-        username: req.session.passport.user.username,
-        firstName:req.session.passport.user.firstName,
-        lastName:req.session.passport.user.lastName,
-        profession:req.session.passport.user.profession,
-        biography:req.session.passport.user.biography,
-    };
+    let loggedUser = req.session.passport.user
     res.render("user/user_profile", loggedUser);
 });
-
-
-
-
-
-
-// console.log(JSON.stringify(data.userData, null, 2))
-
-// console.log(JSON.stringify(data.userData[0], null, 2))
-
-
-
-
-
 
 
 app.listen(3000, ()=> {
