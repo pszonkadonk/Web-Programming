@@ -1,23 +1,38 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const data = require('../data'); //user data
+const bcrypt = require('bcrypt-nodejs');
+const flash = require('connect-flash');
 
-module.exports = () => {
-    passport.use(new LocalStrategy(
-    (username, password, done) => {
-        let targetUser;
-        for(let user of data.userData) { //find user with username and verify password
-            if(user.username === username && 
-                user.verifyPassword(password)) {
-                targetUser = user;
-                break;
-            }
+
+
+module.exports = (passport, LocalStrategy) => {
+    function verifyPassword(password, hashedPassword) {
+        return bcrypt.compareSync(password, hashedPassword)
+}
+    passport.serializeUser(function(user, done) {
+    done(null, user);
+    });
+
+    passport.deserializeUser(function(user, done) {
+    done(null, user);
+    });
+    passport.use(new LocalStrategy({
+            passReqToCallback: true // don't forget this
+        },
+        (req, username, password, done) => {
+            data.userData.findUserByUserName(username).then((user) => {
+                if(verifyPassword(password, user.hashedPassword)) {
+                    return done(null, user);
+                }
+                else {
+                    return done(null, false, req.flash('invalid', 'Invalid password, please try again'));
+                }
+            })
+            .catch((err) => {
+                return done(null, false, req.flash('invalid', 'Invalid username please try again'));
+            });
         }
-        if(targetUser) {
-            return done(null, targetUser)  
-        }
-        else {
-            return done(null, false);
-        }
-    }
     ));
 }
+

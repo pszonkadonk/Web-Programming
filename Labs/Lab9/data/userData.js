@@ -4,6 +4,18 @@ const users = [
   { _id: "723445325124124", username: "theboywholived", hashedPassword: "$2a$06$dBxLrv8u.bWdc93at0XTPeu0OC.2zbpTRXal5OHTmryPdDTOjp00S", firstName: "Harry", lastName: "Potter", profession:"Student", biography: "Harry Potter is a series of fantasy novels written by British author J. K. Rowling. The novels chronicle the life of a young wizard, Harry Potter, and his friends Hermione Granger and Ron Weasley, all of whom are students at Hogwarts School of Witchcraft and Wizardry . The main story arc concerns Harry's struggle against Lord Voldemort, a dark wizard who intends to become immortal, overthrow the wizard governing body known as the Ministry of Magic, and subjugate all wizards and Muggles." }
 ]
 
+function findUserByUserName(username) {
+  return new Promise((resolve, reject) => {
+    for(let user of users) { //find user with username and verify password
+      if(user.username === username) {
+        resolve(user);
+        }
+      } 
+    reject(new Error("Could not find user"));    //otherwise return an error           
+    });
+  }
 
 
-module.exports = users;
+module.exports = {
+  findUserByUserName: findUserByUserName
+};
