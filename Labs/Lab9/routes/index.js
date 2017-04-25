@@ -1,6 +1,6 @@
 const userRoutes = require('./userRoutes');
 
-const constructorMethod = (app, passport) => {
+const constructorMethod = (app) => {
     app.use("/", userRoutes);
 
     app.use("*", (req,res) => {

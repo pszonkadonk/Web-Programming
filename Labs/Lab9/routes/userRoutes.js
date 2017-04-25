@@ -1,41 +1,50 @@
 const express = require('express');
 const router = express.Router();
-// const passport = require('../passport-config/passport-strats')
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const flash = require('connect-flash');
 
-module.exports = (app, passport) => {
-    router.get("/", (req,res) => {
-            res.render("user/login");
-        // if(user == "authenticated") {
-        //     res.redirect("/private");
-        // }
-        // else {
-        // }
-    });
 
-    router.post("/login", passport.authenticate('local', { failureRedirect: '/login' }),
-        (req,res) => {  
-            // try to authenticate user with passport
+require('../passport-config/passport-strats.js')(passport, LocalStrategy);
 
-            // if user is authenticated
-            if(user == "authenticated") {
-                res.redirect("/private")
-            }
-            else {  //otherwise redirect to / and display error message
-                res.redirect("/")
-            }
-    })
 
-    router.get("/private", (req, res) => {
-        //only valid users can get to /private
-        let user = req.user;
-        res.render("user/user_profile", {
-            user: user
-        });
-    });
-    return router;
+function ensureAuthenticated(req,res,next) {
+    if(req.user) {
+        return next();
+    }
+    else {
+        res.redirect('/login');
+    }
 }
 
+router.get("/", (req,res) => {
+    if(req.user) {
+        res.redirect('/private')
+    }
+    else {
+        res.redirect('/login');
+    }
+});
 
+router.get('/login', (req,res) => {
+    res.render('user/login', {error: req.flash('invalid')});
+})
+
+router.post("/login", 
+    passport.authenticate('local',
+    { failureRedirect: '/login',
+    successRedirect: '/private',
+    failureFlash: true
+    }
+));
+
+router.get("/private", ensureAuthenticated, (req, res) => {    
+
+    let loggedUser = req.user
+    res.render("user/user_profile", loggedUser);
+});
+
+module.exports = router;
 
 
 

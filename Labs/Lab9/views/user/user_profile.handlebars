@@ -2,8 +2,17 @@
     <h2>Welcome {{this.firstName}} {{this.lastName}}</h2>
     <br/>
     <p>Here is some information about yourself:</p>
-    <p>Profession: {{this.profession}}</p>
+    <ul>
+        <li>User ID: {{this._id}}</li>
+        <li>First Name: {{this.firstName}}</li>
+        <li>Last Name: {{this.lastName}}</li>
+        <li>Username: {{this.username}}</li>
+        <li>Profession: {{this.profession}}</li>
+    </ul>
     <h4>Biography</h4>
     <p>{{this.biography}}</p>
 
 </div>
+{{#if error}}
+<p>{{error}}</p>
+{{/if}}
