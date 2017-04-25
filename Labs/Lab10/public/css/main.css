@@ -1,0 +1,16 @@
+body {
+    padding-top: 50px;
+}
+
+
+.navbar-inverse .navbar-brand{
+    color: #ffffff;
+}
+.hints {
+    color: #767676;
+}
+
+.the-result {
+    background: #666;
+    color: #000;
+}
